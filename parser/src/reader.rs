@@ -14,7 +14,7 @@ use crate::{
     zwl::{
         ZwlWallet,
         block::CompactBlockData,
-        data::{WalletOptions, WalletZecPriceInfo},
+        data::{ChainType, WalletOptions, WalletZecPriceInfo},
         read_string, read_tree,
         wallet_txns::WalletTxns,
     },
@@ -27,14 +27,12 @@ impl WalletReader {
         25
     }
 
-    /// Public API: what you asked for.
     pub fn read(path: impl AsRef<Path>) -> Result<ZwlWallet, WalletError> {
         let file = File::open(path)?;
         let reader = BufReader::new(file);
         Self::read_from_reader(reader)
     }
 
-    /// Internal-ish: read from any reader.
     pub fn read_from_reader<R: io::Read + ReadBytesExt>(
         mut reader: R,
     ) -> Result<ZwlWallet, WalletError> {
@@ -46,7 +44,7 @@ impl WalletReader {
         let keys = crate::zwl::keys::Keys::read(&mut reader)?;
         let blocks = Vector::read(&mut reader, |r| CompactBlockData::read(r))?;
         let transactions = WalletTxns::read(&mut reader)?;
-        let chain_name = read_string(&mut reader)?;
+        let chain_name = ChainType::from(read_string(&mut reader)?);
         let wallet_options = WalletOptions::read(&mut reader)?;
         let birthday = reader.read_u64::<LittleEndian>()?;
 

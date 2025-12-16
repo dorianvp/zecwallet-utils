@@ -65,6 +65,7 @@ use std::{
 use orchard_data::{HashSer, MERKLE_DEPTH, SER_V1};
 
 use crate::zwl::{
+    data::ChainType,
     keys::{orchard::WalletOKey, sapling::WalletZKey, transparent::WalletTKey},
     wallet_txns::WalletTxns,
 };
@@ -76,7 +77,7 @@ pub struct ZwlWallet {
     pub keys: Keys,
     pub blocks: Vec<CompactBlockData>,
     pub transactions: WalletTxns,
-    pub chain_name: String,
+    pub chain_name: ChainType,
     pub wallet_options: WalletOptions,
     pub birthday: u64,
     pub verified_tree: Option<TreeState>,

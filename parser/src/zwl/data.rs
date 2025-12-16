@@ -1,6 +1,6 @@
 use byteorder::{LittleEndian, ReadBytesExt, WriteBytesExt};
 use std::{
-    fmt,
+    fmt::{self, Display},
     io::{self, Read},
 };
 use zcash_encoding::Optional;
@@ -164,5 +164,35 @@ impl fmt::Display for WalletOptions {
             "download_memos: {}, spam_threshold: {}",
             self.download_memos, self.spam_threshold
         )
+    }
+}
+
+#[derive(Debug, Clone, Copy)]
+pub enum ChainType {
+    Mainnet,
+    Testnet,
+    Regtest,
+    Unknown,
+}
+
+impl From<String> for ChainType {
+    fn from(s: String) -> Self {
+        match s.as_str() {
+            "mainnet" | "main" => ChainType::Mainnet,
+            "testnet" | "test" => ChainType::Testnet,
+            "regtest" => ChainType::Regtest,
+            _ => ChainType::Unknown,
+        }
+    }
+}
+
+impl Display for ChainType {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        match self {
+            ChainType::Mainnet => write!(f, "Mainnet"),
+            ChainType::Testnet => write!(f, "Testnet"),
+            ChainType::Regtest => write!(f, "Regtest"),
+            ChainType::Unknown => write!(f, "Unkown"),
+        }
     }
 }
