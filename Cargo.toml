@@ -1,5 +1,2 @@
 [workspace]
-members = [
-    "parser",
-    "zecwallet-dump",
-]
+members = ["zecwallet-parser", "zecwallet-dump"]

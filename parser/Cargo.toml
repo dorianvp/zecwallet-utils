@@ -1,5 +1,5 @@
 [package]
-name = "parser"
+name = "zecwallet-parser"
 version = "0.0.0"
 edition = "2024"
 
