@@ -1,2 +1,5 @@
 [workspace]
-members = ["parser", "zecwallet-dump"]
+members = ["crates/parser", "crates/zecwallet-dump"]
+
+[workspace.dependencies]
+zecwallet-parser = { path = "./crates/parser", version = "0.0.0" }

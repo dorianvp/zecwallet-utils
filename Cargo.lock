@@ -2212,34 +2212,12 @@ version = "0.0.0"
 dependencies = [
  "clap",
  "owo-colors",
- "zecwallet-parser 0.0.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "zecwallet-parser",
 ]
 
 [[package]]
 name = "zecwallet-parser"
 version = "0.0.0"
-dependencies = [
- "bip0039",
- "byteorder",
- "hex",
- "incrementalmerkletree 0.3.1",
- "jubjub 0.10.0",
- "orchard 0.10.2",
- "orchard 0.3.0",
- "prost",
- "sapling-crypto",
- "secp256k1",
- "zcash_client_backend",
- "zcash_encoding",
- "zcash_keys",
- "zcash_primitives",
-]
-
-[[package]]
-name = "zecwallet-parser"
-version = "0.0.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3ec75cfd516d5b8c51b65487233e62cb01c8abc7c2d94eb10b2725ad1ed24cc1"
 dependencies = [
  "bip0039",
  "byteorder",
