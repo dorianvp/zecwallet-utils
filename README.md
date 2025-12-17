@@ -1,7 +1,7 @@
 # zecwallet-utils
 
 A small Rust workspace with utilities for working with **ZecWallet Lite** wallet files
-(`zecwallet-lite.dat`).
+(`zecwallet-light-wallet.dat`).
 
 This repo currently contains:
 
