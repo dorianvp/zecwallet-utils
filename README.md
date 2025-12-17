@@ -5,8 +5,8 @@ A small Rust workspace with utilities for working with **ZecWallet Lite** wallet
 
 This repo currently contains:
 
-- [`zecwallet-parser`](./parser) – library crate to parse ZecWallet Lite wallet files.
-- [`zecwallet-dump`](./zecwallet-dump) – CLI tool to print a human-readable summary of a wallet file.
+- [`zecwallet-parser`](./crates/parser/README.md) – library crate to parse ZecWallet Lite wallet files.
+- [`zecwallet-dump`](./crates/zecwallet-dump/README.md) – CLI tool to print a human-readable summary of a wallet file.
 
 > ⚠️ **Security note**  
 > ZecWallet Lite wallet files may contain private keys, seeds and other sensitive data.  
