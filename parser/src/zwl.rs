@@ -4,7 +4,7 @@
 //! wallet version, keys, and other account-related information.
 //!
 //! ## Overview
-//! The ZecWallet Lite parser reads data from the `zecwallet-lite.dat` file. The data
+//! The ZecWallet Lite parser reads data from the `zecwallet-light-wallet.dat` file. The data
 //! is written and read linearly using a `BufReader`/`BufWriter`.
 //!
 //! ### Data Read (in order):
