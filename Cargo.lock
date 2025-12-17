@@ -1171,26 +1171,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "parser"
-version = "0.0.0"
-dependencies = [
- "bip0039",
- "byteorder",
- "hex",
- "incrementalmerkletree 0.3.1",
- "jubjub 0.10.0",
- "orchard 0.10.2",
- "orchard 0.3.0",
- "prost",
- "sapling-crypto",
- "secp256k1",
- "zcash_client_backend",
- "zcash_encoding",
- "zcash_keys",
- "zcash_primitives",
-]
-
-[[package]]
 name = "password-hash"
 version = "0.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2232,7 +2212,27 @@ version = "0.0.0"
 dependencies = [
  "clap",
  "owo-colors",
- "parser",
+ "zecwallet-parser",
+]
+
+[[package]]
+name = "zecwallet-parser"
+version = "0.0.0"
+dependencies = [
+ "bip0039",
+ "byteorder",
+ "hex",
+ "incrementalmerkletree 0.3.1",
+ "jubjub 0.10.0",
+ "orchard 0.10.2",
+ "orchard 0.3.0",
+ "prost",
+ "sapling-crypto",
+ "secp256k1",
+ "zcash_client_backend",
+ "zcash_encoding",
+ "zcash_keys",
+ "zcash_primitives",
 ]
 
 [[package]]

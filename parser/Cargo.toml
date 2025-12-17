@@ -1,7 +1,10 @@
 [package]
 name = "zecwallet-parser"
+description = "A parser for ZecWallet Lite wallet files."
 version = "0.0.0"
 edition = "2024"
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/dorianvp/zecwallet-utils"
 
 [dependencies]
 bip0039 = "0.12.0"

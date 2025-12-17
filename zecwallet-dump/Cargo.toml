@@ -1,9 +1,12 @@
 [package]
 name = "zecwallet-dump"
+description = "A command-line tool to summarize the contents of a ZecWallet Lite wallet file."
 version = "0.0.0"
 edition = "2024"
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/dorianvp/zecwallet-utils"
 
 [dependencies]
 clap = { version = "4.5.53", features = ["derive"] }
 owo-colors = "4.2.3"
-parser = { path = "../parser" }
+zecwallet-parser = { path = "../parser" }

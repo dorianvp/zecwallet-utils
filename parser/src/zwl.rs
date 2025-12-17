@@ -29,7 +29,6 @@
 //!     1. The first account containing all keys.
 //!     2. The second account containing only Sapling and Transparent keys.
 //!
-//```
 
 pub mod block;
 pub mod data;

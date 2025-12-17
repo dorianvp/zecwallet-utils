@@ -1,32 +1,10 @@
-use std::path::PathBuf;
+mod cli;
 
-use clap::{Parser, Subcommand};
+use clap::Parser;
 use owo_colors::OwoColorize;
-use parser::reader::WalletReader;
+use zecwallet_parser::reader::WalletReader;
 
-#[derive(Parser)]
-#[command(version, about, long_about = None)]
-struct Cli {
-    /// The ZecWallet Lite wallet file.
-    wallet_file: PathBuf,
-
-    /// Sets a custom config file
-    #[arg(short, long, value_name = "FILE")]
-    config: Option<PathBuf>,
-
-    /// Turn debugging information on
-    #[arg(short, long, action = clap::ArgAction::Count)]
-    debug: u8,
-
-    #[command(subcommand)]
-    command: Option<Commands>,
-}
-
-#[derive(Subcommand)]
-enum Commands {
-    /// Summarizes the contents of the specified ZecWallet Lite wallet file.
-    Summarize,
-}
+use crate::cli::{Cli, Commands};
 
 fn main() {
     let cli = Cli::parse();
