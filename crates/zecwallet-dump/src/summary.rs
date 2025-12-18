@@ -1,12 +1,31 @@
 use owo_colors::OwoColorize;
 use zecwallet_parser::zwl::ZwlWallet;
 
+/// Prints the summary of the given wallet.
+/// Output varies whether in `debug` mode or `standard` mode.
+///
+/// # Standard Mode
+///
+/// The summary consists of the following data:
+///
+/// - File version
+/// - Network
+/// - Mnemonic
+/// - Birthday
+/// - Latest sync height (verified tree)
+/// - Number of keys, specified per pool type
+/// - Transactions:
+///   - Total count
+///   - Range of block heights
+///   - Estimated balance
+///
+/// # Debug Mode
+///
+/// TODO
+///
 pub fn print_summary(wallet: &ZwlWallet, _debug: u8) {
     print_header(wallet);
     print_key_summary(wallet);
-    // later: print_blocks(wallet);
-    //        print_transactions(wallet);
-    //        print_balance(wallet);
 }
 
 fn print_header(wallet: &ZwlWallet) {
