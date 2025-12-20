@@ -3,6 +3,7 @@ pub mod sapling;
 pub mod transparent;
 
 use byteorder::{LittleEndian, ReadBytesExt};
+use sapling_crypto::zip32::ExtendedFullViewingKey;
 use std::fmt::Display;
 use std::io::{self, Read};
 use zcash_encoding::Vector;
@@ -49,6 +50,13 @@ impl Keys {
             return Err(io::Error::new(io::ErrorKind::InvalidData, e));
         }
 
+        // let keys = if version <= 14 {
+        //     // Keys::read_old(version, &mut reader, config)
+        //     todo!("Wallets with version {} are not supported yet", version)
+        // } else {
+        //     Keys::read(&mut reader)
+        // }?;
+
         // Read if wallet is encrypted
         let encrypted = reader.read_u8()? > 0;
 
@@ -82,6 +90,164 @@ impl Keys {
             okeys,
         })
     }
+
+    pub fn get_all_extfvks(&self) -> Vec<ExtendedFullViewingKey> {
+        self.zkeys.iter().map(|zk| zk.extfvk.clone()).collect()
+    }
+
+    pub fn have_sapling_spending_key(&self, extfvk: &ExtendedFullViewingKey) -> bool {
+        self.zkeys
+            .iter()
+            .find(|zk| zk.extfvk == *extfvk)
+            .map(|zk| zk.have_spending_key())
+            .unwrap_or(false)
+    }
+
+    // pub fn read_old<R: Read>(
+    //     version: u64,
+    //     mut reader: R,
+    //     config: &LightClientConfig<P>,
+    // ) -> io::Result<Self> {
+    //     let encrypted = if version >= 4 {
+    //         reader.read_u8()? > 0
+    //     } else {
+    //         false
+    //     };
+
+    //     let mut enc_seed = [0u8; 48];
+    //     if version >= 4 {
+    //         reader.read_exact(&mut enc_seed)?;
+    //     }
+
+    //     let nonce = if version >= 4 {
+    //         Vector::read(&mut reader, |r| r.read_u8())?
+    //     } else {
+    //         vec![]
+    //     };
+
+    //     // Seed
+    //     let mut seed_bytes = [0u8; 32];
+    //     reader.read_exact(&mut seed_bytes)?;
+
+    //     let zkeys = if version <= 6 {
+    //         // Up until version 6, the wallet keys were written out individually
+    //         // Read the spending keys
+    //         let extsks = Vector::read(&mut reader, |r| ExtendedSpendingKey::read(r))?;
+
+    //         let extfvks = if version >= 4 {
+    //             // Read the viewing keys
+    //             Vector::read(&mut reader, |r| ExtendedFullViewingKey::read(r))?
+    //         } else {
+    //             // Calculate the viewing keys
+    //             extsks
+    //                 .iter()
+    //                 .map(ExtendedFullViewingKey::from)
+    //                 .collect::<Vec<ExtendedFullViewingKey>>()
+    //         };
+
+    //         // Calculate the addresses
+    //         let addresses = extfvks
+    //             .iter()
+    //             .map(|fvk| fvk.default_address().1)
+    //             .collect::<Vec<PaymentAddress>>();
+
+    //         // If extsks is of len 0, then this wallet is locked
+    //         let zkeys_result = if extsks.is_empty() {
+    //             // Wallet is locked, so read only the viewing keys.
+    //             extfvks
+    //                 .iter()
+    //                 .zip(addresses.iter())
+    //                 .enumerate()
+    //                 .map(|(i, (extfvk, payment_address))| {
+    //                     let zk = WalletZKey::new_locked_hdkey(i as u32, extfvk.clone());
+    //                     if zk.zaddress != *payment_address {
+    //                         Err(io::Error::new(
+    //                             ErrorKind::InvalidData,
+    //                             "Payment address didn't match",
+    //                         ))
+    //                     } else {
+    //                         Ok(zk)
+    //                     }
+    //                 })
+    //                 .collect::<Vec<io::Result<WalletZKey>>>()
+    //         } else {
+    //             // Wallet is unlocked, read the spending keys as well
+    //             extsks
+    //                 .into_iter()
+    //                 .zip(extfvks.into_iter().zip(addresses.iter()))
+    //                 .enumerate()
+    //                 .map(|(i, (extsk, (extfvk, payment_address)))| {
+    //                     let zk = WalletZKey::new_hdkey(i as u32, extsk);
+    //                     if zk.zaddress != *payment_address {
+    //                         return Err(io::Error::new(
+    //                             ErrorKind::InvalidData,
+    //                             "Payment address didn't match",
+    //                         ));
+    //                     }
+
+    //                     if zk.extfvk != extfvk {
+    //                         return Err(io::Error::new(
+    //                             ErrorKind::InvalidData,
+    //                             "Full View key didn't match",
+    //                         ));
+    //                     }
+
+    //                     Ok(zk)
+    //                 })
+    //                 .collect::<Vec<io::Result<WalletZKey>>>()
+    //         };
+
+    //         // Convert vector of results into result of vector, returning an error if any one of the keys failed the checks above
+    //         zkeys_result.into_iter().collect::<io::Result<_>>()?
+    //     } else {
+    //         // After version 6, we read the WalletZKey structs directly
+    //         Vector::read(&mut reader, |r| WalletZKey::read(r))?
+    //     };
+
+    //     let tkeys = if version <= 20 {
+    //         let tkeys = Vector::read(&mut reader, |r| {
+    //             let mut tpk_bytes = [0u8; 32];
+    //             r.read_exact(&mut tpk_bytes)?;
+    //             secp256k1::SecretKey::from_slice(&tpk_bytes)
+    //                 .map_err(|e| io::Error::new(ErrorKind::InvalidData, e))
+    //         })?;
+
+    //         let taddresses = if version >= 4 {
+    //             // Read the addresses
+    //             Vector::read(&mut reader, |r| utils::read_string(r))?
+    //         } else {
+    //             // Calculate the addresses
+    //             tkeys
+    //                 .iter()
+    //                 .map(|sk| {
+    //                     WalletTKey::address_from_prefix_sk(&config.base58_pubkey_address(), sk)
+    //                 })
+    //                 .collect()
+    //         };
+
+    //         tkeys
+    //             .iter()
+    //             .zip(taddresses.iter())
+    //             .enumerate()
+    //             .map(|(i, (sk, taddr))| WalletTKey::from_raw(sk, taddr, i as u32))
+    //             .collect::<Vec<_>>()
+    //     } else {
+    //         // Read the TKeys
+    //         Vector::read(&mut reader, |r| WalletTKey::read(r))?
+    //     };
+
+    //     Ok(Self {
+    //         config: config.clone(),
+    //         encrypted,
+    //         unlocked: !encrypted,
+    //         enc_seed,
+    //         nonce,
+    //         seed: seed_bytes,
+    //         zkeys,
+    //         tkeys,
+    //         okeys: vec![],
+    //     })
+    // }
 }
 
 impl Display for Keys {

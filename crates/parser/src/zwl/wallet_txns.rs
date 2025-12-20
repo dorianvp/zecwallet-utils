@@ -5,6 +5,7 @@ use std::{
 };
 
 use byteorder::{LittleEndian, ReadBytesExt};
+use sapling_crypto::zip32::ExtendedFullViewingKey;
 use zcash_encoding::Vector;
 use zcash_primitives::{consensus::BlockHeight, transaction::TxId};
 
@@ -95,6 +96,17 @@ impl WalletTxns {
         };
 
         Ok(Self { current, last_txid })
+    }
+
+    pub fn adjust_spendable_status(&mut self, spendable_keys: Vec<ExtendedFullViewingKey>) {
+        self.current.values_mut().for_each(|tx| {
+            tx.sapling_notes.iter_mut().for_each(|nd| {
+                nd.have_spending_key = spendable_keys.contains(&nd.extfvk);
+                if !nd.have_spending_key {
+                    nd.witnesses.clear();
+                }
+            })
+        });
     }
 }
 

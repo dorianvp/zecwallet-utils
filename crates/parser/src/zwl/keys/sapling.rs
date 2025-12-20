@@ -81,6 +81,10 @@ impl WalletZKey {
             nonce,
         })
     }
+
+    pub fn have_spending_key(&self) -> bool {
+        self.extsk.is_some() || self.enc_key.is_some() || self.hdkey_num.is_some()
+    }
 }
 
 impl fmt::Display for WalletZKey {
