@@ -72,7 +72,12 @@ impl Keys {
         reader.read_exact(&mut seed_bytes)?;
 
         // TODO: read old versions of wallet file
-        let okeys = Vector::read(&mut reader, |r| WalletOKey::read(r))?;
+
+        let okeys = if version <= 21 {
+            vec![]
+        } else {
+            Vector::read(&mut reader, |r| WalletOKey::read(r))?
+        };
 
         // TODO: read old versions of wallet file
         let zkeys = Vector::read(&mut reader, |r| WalletZKey::read(r))?;
