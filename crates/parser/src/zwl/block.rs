@@ -5,6 +5,7 @@ use std::{
 
 use byteorder::{LittleEndian, ReadBytesExt};
 use sapling_crypto::CommitmentTree;
+use tracing::instrument;
 use zcash_encoding::Vector;
 use zcash_primitives::merkle_tree::read_commitment_tree;
 
@@ -19,6 +20,7 @@ impl CompactBlockData {
         20
     }
 
+    #[instrument(level = "info", name = "CompactBlockData::read", skip_all, err)]
     pub fn read<R: Read>(mut reader: R) -> io::Result<Self> {
         // read height of CompactBlock
         let height = reader.read_i32::<LittleEndian>()? as u64;

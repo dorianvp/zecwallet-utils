@@ -2,6 +2,7 @@ use std::{fmt, io};
 
 use byteorder::{LittleEndian, ReadBytesExt};
 use orchard_old::keys::{FullViewingKey, Scope, SpendingKey};
+use tracing::instrument;
 use zcash_encoding::{Optional, Vector};
 use zcash_keys::address::UnifiedAddress;
 
@@ -38,6 +39,7 @@ impl WalletOKey {
         1
     }
 
+    #[instrument(level = "info", name = "WalletOKey::read", skip_all, err)]
     pub fn read<R: ReadBytesExt>(mut reader: R) -> io::Result<Self> {
         let version = reader.read_u8()?;
         assert!(version <= Self::serialized_version());

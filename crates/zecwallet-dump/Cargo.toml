@@ -9,4 +9,7 @@ repository = "https://github.com/dorianvp/zecwallet-utils"
 [dependencies]
 clap = { version = "4.5.53", features = ["derive"] }
 owo-colors = "4.2.3"
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+
 zecwallet-parser = { workspace = true }

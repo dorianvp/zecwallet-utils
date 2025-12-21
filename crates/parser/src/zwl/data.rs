@@ -3,6 +3,7 @@ use std::{
     fmt::{self, Display},
     io::{self, Read},
 };
+use tracing::instrument;
 use zcash_encoding::Optional;
 
 // Struct that tracks the latest and historical price of ZEC in the wallet
@@ -41,6 +42,7 @@ impl WalletZecPriceInfo {
         20
     }
 
+    #[instrument(level = "info", name = "WalletZecPriceInfo::read", skip_all, err)]
     pub fn read<R: Read>(mut reader: R) -> io::Result<Self> {
         let version = reader.read_u64::<LittleEndian>()?;
         if version > Self::serialized_version() {
@@ -120,6 +122,7 @@ impl WalletOptions {
         2
     }
 
+    #[instrument(level = "info", name = "WalletOptions::read", skip_all, err)]
     pub fn read<R: ReadBytesExt>(mut reader: R) -> io::Result<Self> {
         let version = reader.read_u64::<LittleEndian>()?;
 

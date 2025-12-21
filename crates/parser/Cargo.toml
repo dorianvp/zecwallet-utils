@@ -25,3 +25,4 @@ sapling-crypto = { version = "0.3", default-features = false }
 # essentially breaking the parsing of commitment trees (and thus the parsing of the rest of the file).
 orchard_old = { package = "orchard", version = "=0.3.0" }
 orchard_new = { package = "orchard", version = "0.10.1" }
+tracing = "0.1.44"

@@ -6,6 +6,7 @@ use std::{
 
 use byteorder::{LittleEndian, ReadBytesExt};
 use orchard_old::tree::MerkleHashOrchard;
+use tracing::instrument;
 use zcash_client_backend::proto::service::TreeState;
 use zcash_encoding::{Optional, Vector};
 
@@ -27,12 +28,14 @@ impl WalletReader {
         25
     }
 
+    #[instrument(level = "info", name = "WalletReader::read", skip_all, fields(path = %path.as_ref().display()))]
     pub fn read(path: impl AsRef<Path>) -> Result<ZwlWallet, WalletError> {
         let file = File::open(path)?;
         let reader = BufReader::new(file);
         Self::read_from_reader(reader)
     }
 
+    #[instrument(level = "info", name = "WalletReader::read_from_reader", skip_all, err)]
     pub fn read_from_reader<R: io::Read + ReadBytesExt>(
         mut reader: R,
     ) -> Result<ZwlWallet, WalletError> {
@@ -41,7 +44,6 @@ impl WalletReader {
             return Err(WalletError::UnsupportedVersion(version));
         }
 
-        // let keys = crate::zwl::keys::Keys::read(&mut reader)?;
         let keys = if version <= 14 {
             // Keys::read_old(version, &mut reader, config)
             todo!("Wallets with version {} are not supported yet", version)

@@ -4,6 +4,7 @@ use std::io::{self, ErrorKind, Read};
 use byteorder::{LittleEndian, ReadBytesExt};
 use sapling_crypto::PaymentAddress;
 use sapling_crypto::zip32::{ExtendedFullViewingKey, ExtendedSpendingKey};
+use tracing::instrument;
 use zcash_encoding::{Optional, Vector};
 
 #[derive(PartialEq, Debug, Clone)]
@@ -34,6 +35,7 @@ impl WalletZKey {
         1
     }
 
+    #[instrument(level = "info", name = "WalletZKey::read", skip_all, err)]
     pub fn read<R: Read>(mut reader: R) -> io::Result<Self> {
         let version = reader.read_u8()?;
         assert!(version <= Self::serialized_version());

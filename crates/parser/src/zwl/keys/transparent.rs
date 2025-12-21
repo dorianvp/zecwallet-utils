@@ -4,6 +4,7 @@ use std::{
     fmt,
     io::{self, Read},
 };
+use tracing::instrument;
 use zcash_encoding::{Optional, Vector};
 
 #[derive(Debug, PartialEq, Clone, Copy)]
@@ -32,6 +33,7 @@ impl WalletTKey {
         1
     }
 
+    #[instrument(level = "info", name = "WalletTKey::read", skip_all, err)]
     pub fn read<R: Read>(mut reader: R) -> io::Result<Self> {
         let version = reader.read_u8()?;
         assert!(version <= Self::serialized_version());

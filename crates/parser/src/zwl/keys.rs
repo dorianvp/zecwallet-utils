@@ -6,6 +6,7 @@ use byteorder::{LittleEndian, ReadBytesExt};
 use sapling_crypto::zip32::ExtendedFullViewingKey;
 use std::fmt::Display;
 use std::io::{self, Read};
+use tracing::instrument;
 use zcash_encoding::Vector;
 
 use crate::zwl::keys::orchard::WalletOKey;
@@ -40,6 +41,7 @@ impl Keys {
         22
     }
 
+    #[instrument(level = "info", name = "Keys::read", skip_all, err)]
     pub fn read<R: Read>(mut reader: R) -> io::Result<Self> {
         let version = reader.read_u64::<LittleEndian>()?;
         if version > Self::serialized_version() {
@@ -70,8 +72,6 @@ impl Keys {
         // Read "possible" clear seed
         let mut seed_bytes = [0u8; 32];
         reader.read_exact(&mut seed_bytes)?;
-
-        // TODO: read old versions of wallet file
 
         let okeys = if version <= 21 {
             vec![]

@@ -6,6 +6,7 @@ use std::{
 
 use byteorder::{LittleEndian, ReadBytesExt};
 use sapling_crypto::zip32::ExtendedFullViewingKey;
+use tracing::instrument;
 use zcash_encoding::Vector;
 use zcash_primitives::{consensus::BlockHeight, transaction::TxId};
 
@@ -53,6 +54,7 @@ impl WalletTxns {
         21
     }
 
+    #[instrument(level = "info", name = "WalletTxns::read", skip_all, err)]
     pub fn read<R: Read>(mut reader: R) -> io::Result<Self> {
         let version = reader.read_u64::<LittleEndian>()?;
         if version > Self::serialized_version() {

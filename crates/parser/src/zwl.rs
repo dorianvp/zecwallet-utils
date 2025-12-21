@@ -49,6 +49,7 @@ use incrementalmerkletree::{
 
 use keys::Keys;
 use orchard_old::tree::MerkleHashOrchard;
+use tracing::instrument;
 use zcash_client_backend::proto::service::TreeState;
 use zcash_encoding::{Optional, Vector};
 use zcash_keys::keys::{UnifiedFullViewingKey, UnifiedSpendingKey};
@@ -378,6 +379,7 @@ pub fn read_string<R: ReadBytesExt>(mut reader: R) -> io::Result<String> {
 /// ids should always be treated as opaque, totally ordered identifiers without additional
 /// semantics.
 #[allow(clippy::redundant_closure)]
+#[instrument(level = "info", name = "read_tree", skip_all, err)]
 pub fn read_tree<H: Hashable + HashSer + Ord + Clone, R: ReadBytesExt>(
     mut reader: R,
 ) -> io::Result<BridgeTree<MerkleHashOrchard, 32>> {
